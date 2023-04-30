@@ -98,27 +98,27 @@ def capture_images(id_, credentials):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         faces = face_detector.detectMultiScale(gray, 1.3, 5)
         
-            if not os.path.exists('dataset'):
-        os.makedirs('dataset')
+        if not os.path.exists('dataset'):
+            os.makedirs('dataset')
 
-    for (x, y, w, h) in faces:
-        sample_num += 1
-        if sample_num % 5 == 0:
-            image_count += 1
-            image_filename = f'dataset/User.{id_}.{image_count}.jpg'
-            cv2.imwrite(image_filename, gray[y:y+h, x:x+w])
-            cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        for (x, y, w, h) in faces:
+            sample_num += 1
+            if sample_num % 5 == 0:
+                image_count += 1
+                image_filename = f'dataset/User.{id_}.{image_count}.jpg'
+                cv2.imwrite(image_filename, gray[y:y+h, x:x+w])
+                cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
-            try:
-                service = build(API_NAME, API_VERSION, credentials=credentials)
-                file_metadata = {'name': os.path.basename(image_filename)}
-                media = MediaFileUpload(image_filename, resumable=True)
-                file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-                print(f'File ID: {file.get("id")}')
-                os.remove(image_filename)
-            except HttpError as error:
-                print(f'An error occurred: {error}')
-                file = None
+                try:
+                    service = build(API_NAME, API_VERSION, credentials=credentials)
+                    file_metadata = {'name': os.path.basename(image_filename)}
+                    media = MediaFileUpload(image_filename, resumable=True)
+                    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                    print(f'File ID: {file.get("id")}')
+                    os.remove(image_filename)
+                except HttpError as error:
+                    print(f'An error occurred: {error}')
+                    file = None
 
     cv2.imshow('image', img)
     if cv2.waitKey(1) == ord('q'):
