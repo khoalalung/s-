@@ -120,10 +120,31 @@ def capture_images(id_, credentials):
                     print(f'An error occurred: {error}')
                     file = None
 
-    cv2.imshow('image', img)
-    if cv2.waitKey(1) == ord('q'):
-        break
-    if image_count >= 40:
-        break
-cam.release()
-cv2.destroyAllWindows()
+        cv2.imshow('image', img)
+        if cv2.waitKey(1) == ord('q'):
+            break
+        if image_count >= 40:
+            break
+    cam.release()
+    cv2.destroyAllWindows()
+def main():
+    st.title("Capture and upload face images")
+    credentials = get_credentials()
+    with sqlite3.connect(DATABASE) as conn:
+        create_table(conn)
+        id_ = st.text_input("Enter ID:")
+        name = st.text_input("Enter name:")
+        age = st.text_input("Enter age:")
+        gender = st.text_input("Enter gender:")
+        
+        if id_ and name and age and gender:
+            insert_or_update_record(conn, id_, name, age, gender)
+        if st.button("Capture Images"):
+            capture_images(id_, credentials)
+            st.success("Images captured and uploaded successfully!")
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as e:
+        print(e)
+        cv2.destroyAllWindows()
