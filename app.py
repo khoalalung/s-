@@ -119,18 +119,21 @@ def insert_or_update_record(conn, id_, name, age, gender):
 #     except Exception as e:
 #         print(e)
 #         cv2.destroyAllWindows()
-def upload_to_drive(file_path, credentials):
+def upload_to_drive(file_path, file_name, credentials):
     try:
-        service = build(API_NAME, API_VERSION, credentials=credentials)
-        file_metadata = {'name': os.path.basename(file_path)}
+        drive_service = build(API_NAME, API_VERSION, credentials=credentials)
+
+        file_metadata = {'name': file_name}
         media = MediaFileUpload(file_path, resumable=True)
-        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+        file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
         file_id = file.get('id')
-        print(f'File ID: {file_id}')
-    return file_id
+        return file_id
     except HttpError as error:
         print(f'An error occurred: {error}')
-    return None
+        return None
+
 
 def main():
     conn = sqlite3.connect(DATABASE)
