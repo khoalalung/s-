@@ -1,2 +1,2 @@
-opencv
-pillow
+opencv-python-headless==4.5.4.58
+pillow==8.4.0
