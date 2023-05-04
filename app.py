@@ -10,8 +10,8 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 DATABASE = 'data.db'
-CLIENT_SECRET_FILE = 'client_secret.json'
-SCOPES = ['https://www.googleapis.com/auth/drive.file']
+CLIENT_SECRET_FILE = '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.json'
+SCOPES = ['https://drive.google.com/drive/folders/1hTThgvzmRjw-wRG6zeAvXLJyJ1StgdDA?usp=sharing']
 API_NAME = 'drive'
 API_VERSION = 'v3'
 
