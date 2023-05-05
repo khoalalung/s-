@@ -77,19 +77,26 @@ def detect_face():
             gender = "Male" if gender_preds[0][0] > 0.5 else "Female"
 
             # Hiển thị thông tin khuôn mặt
-        st.write(f"Age: {int(age)}")
-        st.write(f"Gender: {gender}")
-        confidence = np.max(gender_preds)
-        st.write(f"Confidence: {confidence}")
+            st.write(f"Age: {int(age)}")
+            st.write(f"Gender: {gender}")
+            confidence = np.max(gender_preds)
+            st.write(f"Confidence: {confidence}")
 
-        # Hiển thị hình ảnh
-    st.image(frame, channels="BGR")
+            # Hiển thị hình ảnh
+            st.image(frame, channels="BGR")
 
             # Kiểm tra người dùng có muốn dừng chương trình hay không
-    if st.button("Stop"):
-      break
+            if st.button("Stop"):
+                cap.release()
+                cv2.destroyAllWindows()
+                return
+
+# Chạy chương trình
+if st.button("Register"):
+    capture_and_register()
+if st.button("Detect"):
+    detect_face()
 
 # Giải phóng tài nguyên
 cap.release()
 cv2.destroyAllWindows()
-
