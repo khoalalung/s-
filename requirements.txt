@@ -1,6 +1,4 @@
 opencv-python-headless==4.5.4.58
 pillow==8.4.0
-google-auth
-google-auth-oauthlib
-google-auth-httplib2
-google-api-python-client
+numpy==1.21.0
+os==3.10.0
