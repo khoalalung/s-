@@ -98,5 +98,5 @@ if st.button("Detect"):
     detect_face()
 
 # Giải phóng tài nguyên
-cap.release()
-cv2.destroyAllWindows()
+# cap.release()
+# cv2.destroyAllWindows()
