@@ -1,4 +1,4 @@
 opencv-python-headless==4.5.4.58
 pillow==8.4.0
-numpy==1.21.0
+numpy
 os==3.10.0
