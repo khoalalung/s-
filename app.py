@@ -166,7 +166,15 @@ def register():
     st.write("Hãy điều chỉnh camera sao cho mặt của bạn nằm giữa khung hình và bấm nút Đăng ký")
     image = st.image([])
     if st.button("Đăng ký"):
-        cap = cv2.VideoCapture(0)
+        data = {
+           "name": name,
+           "age": age,
+           "gender": gender,
+           "embedding": embedding
+        }
+        with open(f"registered_users/{name}.pkl", "wb") as f:
+          pickle.dump(data, f)
+        cap = st.capture()
         while True:
             ret, frame = cap.read()
             if not ret:
