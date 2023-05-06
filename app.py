@@ -149,30 +149,32 @@ def register():
             break
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         st.image(frame, use_column_width=True, channels="RGB")
-    st.write("Vui lòng điền thông tin của bạn")
-    name = st.text_input("Tên")
-    age = st.number_input("Tuổi")
-    gender = st.selectbox("Giới tính", ["Nam", "Nữ"])
-    if not name or not age or not gender:
-        st.write("Vui lòng điền đầy đủ thông tin!")
-        return
-    st.write("Hãy điều chỉnh camera sao cho mặt của bạn nằm giữa khung hình và bấm nút Đăng ký")
-    image = st.image([])
-    if st.button("Đăng ký"):
-        image.image(frame)
-        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        face_locations = face_recognition.face_locations(rgb_frame, model="hog")
-        if len(face_locations) > 0:
-            encoding = face_recognition.face_encodings(rgb_frame, face_locations)[0] 
-            df = pd.DataFrame({"Name": [name], "Age": [age], "Gender": [gender], "Encoding": [encoding]})
-            if os.path.exists("data.csv"):
-                df.to_csv("data.csv", mode="a", header=False, index=False)
-            else:
-                df.to_csv("data.csv", index=False)
-            st.write("Đăng ký thành công!")
-            break
+
+        st.write("Vui lòng điền thông tin của bạn")
+        name = st.text_input("Tên")
+        age = st.number_input("Tuổi")
+        gender = st.selectbox("Giới tính", ["Nam", "Nữ"])
+        if not name or not age or not gender:
+            st.write("Vui lòng điền đầy đủ thông tin!")
+            continue
+        st.write("Hãy điều chỉnh camera sao cho mặt của bạn nằm giữa khung hình và bấm nút Đăng ký")
+        image = st.image([])
+        if st.button("Đăng ký"):
+            image.image(frame)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            face_locations = face_recognition.face_locations(rgb_frame, model="hog")
+            if len(face_locations) > 0:
+                encoding = face_recognition.face_encodings(rgb_frame, face_locations)[0] 
+                df = pd.DataFrame({"Name": [name], "Age": [age], "Gender": [gender], "Encoding": [encoding]})
+                if os.path.exists("data.csv"):
+                    df.to_csv("data.csv", mode="a", header=False, index=False)
+                else:
+                    df.to_csv("data.csv", index=False)
+                st.write("Đăng ký thành công!")
+                break
 
     cap.release()
+
 
     
 def recognize():
