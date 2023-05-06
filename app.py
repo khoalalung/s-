@@ -139,6 +139,16 @@ import pickle
 import streamlit as st
 
 def register():
+    global cap
+    cap = st.camera_input("Take a picture")
+    st.write("Hi, let's register your face")
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            st.warning("Could not read from the camera. Please try again.")
+            break
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        st.image(frame, use_column_width=True, channels="RGB")
     st.write("Vui lòng điền thông tin của bạn")
     name = st.text_input("Tên")
     age = st.number_input("Tuổi")
@@ -149,11 +159,15 @@ def register():
     st.write("Hãy điều chỉnh camera sao cho mặt của bạn nằm giữa khung hình và bấm nút Đăng ký")
     image = st.image([])
     if st.button("Đăng ký"):
-        cap = cv2.VideoCapture(0)
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                continue
+#         while True:
+#             ret, frame = cap.read()
+#             if not ret:
+#                st.warning("Could not read from the camera. Please try again.")
+#                break
+#            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+#            st.image(frame, use_column_width=True, channels="RGB")
+
+
             image.image(frame)
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             face_locations = face_recognition.face_locations(rgb_frame, model="hog")
@@ -181,14 +195,10 @@ def recognize():
     image = st.image([])
 
     if st.button("Nhận diện"):
-        cap = cv2.VideoCapture(0)
+        cap = st.camera_input("Take a picture")
         _, frame = cap.read()
         cap.release()
-
-        # Đổi màu ảnh từ BGR sang RGB
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-        # Phát hiện khuôn mặt trong ảnh
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
         gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
