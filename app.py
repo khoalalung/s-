@@ -244,3 +244,7 @@ def recognize():
                         st.write("Không tìm thấy thông tin người dùng. Vui lòng đăng ký trước khi sử dụng tính năng này.")
                 else:
                     st.write("Không tìm thấy thông tin người dùng. Vui lòng đăng ký trước khi sử dụng tính năng này.")
+if __name__ == '__main__':
+    st.title("Face Recognition")
+    st.sidebar.title("Menu")
+    app_mode = st.sidebar.selectbox("Choose the app mode", ["Homepage", "Register", "Detect"])
