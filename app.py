@@ -143,7 +143,12 @@ def register():
     cap = st.camera_input("Take a picture")
     st.write("Hi, let's register your face")
     while True:
+        if cap is not None:
+            ret, frame = cap.read()
+        else:
+            break
         ret, frame = cap.read()
+
         if not ret:
             st.warning("Could not read from the camera. Please try again.")
             break
