@@ -176,6 +176,7 @@ def register():
                 else:
                     df.to_csv("data.csv", index=False)
                 st.write("Đăng ký thành công!")
+                cap.release()
                 break
 
     cap.release()
