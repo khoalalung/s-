@@ -138,24 +138,7 @@ import os
 import pickle
 import streamlit as st
 
-# Tạo thư mục để lưu ảnh người dùng đăng ký
-if not os.path.exists("registered_users"):
-    os.makedirs("registered_users")
-
-# Định nghĩa hàm lưu dữ liệu người dùng đăng ký
-def save_user_data(name, age, gender, embedding):
-    data = {
-        "name": name,
-        "age": age,
-        "gender": gender,
-        "embedding": embedding
-    }
-    with open(f"registered_users/{name}.pkl", "wb") as f:
-        pickle.dump(data, f)
-
-# Định nghĩa hàm đăng ký
 def register():
-    # Lấy ảnh từ camera
     st.write("Vui lòng điền thông tin của bạn")
     name = st.text_input("Tên")
     age = st.number_input("Tuổi")
@@ -166,41 +149,27 @@ def register():
     st.write("Hãy điều chỉnh camera sao cho mặt của bạn nằm giữa khung hình và bấm nút Đăng ký")
     image = st.image([])
     if st.button("Đăng ký"):
-
-        cap = st.capture()
+        cap = cv2.VideoCapture(0)
         while True:
             ret, frame = cap.read()
             if not ret:
                 continue
-            # Hiển thị khung hình trên Streamlit
             image.image(frame)
-            # Xác định vùng chứa khuôn mặt
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-            faces = face_cascade.detectMultiScale(gray, 1.3, 5)
-            if len(faces) > 0:
-                # Lưu ảnh và nhúng khuôn mặt
-                x, y, w, h = faces[0]
-                face_image = frame[y:y+h, x:x+w]
-                face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2RGB)
-                embedding = face_recognition.face_encodings(face_image)[0]
-                save_user_data(name, age, gender, embedding)
+            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            face_locations = face_recognition.face_locations(rgb_frame, model="hog")
+            if len(face_locations) > 0:
+                encoding = face_recognition.face_encodings(rgb_frame, face_locations)[0] 
+                df = pd.DataFrame({"Name": [name], "Age": [age], "Gender": [gender], "Encoding": [encoding]})
+                if os.path.exists("data.csv"):
+                    df.to_csv("data.csv", mode="a", header=False, index=False)
+                else:
+                    df.to_csv("data.csv", index=False)
                 st.write("Đăng ký thành công!")
                 break
         cap.release()
-        data = {
-           "name": name,
-           "age": age,
-           "gender": gender,
-           "embedding": embedding
-        }
-        with open(f"registered_users/{name}.pkl", "wb") as f:
-          pickle.dump(data, f) 
 
     
-# Định nghĩa hàm nhận diện
 def recognize():
-    # Đọc dữ liệu người dùng đã đăng ký
     registered_users = []
     for filename in os.listdir("registered_users"):
         with open(os.path.join("registered_users", filename), "rb") as f:
@@ -227,17 +196,12 @@ def recognize():
         if len(faces) == 0:
             st.write("Không tìm thấy khuôn mặt trong ảnh. Vui lòng thử lại.")
         else:
-            # Vẽ hình chữ nhật bao quanh khuôn mặt và hiển thị thông tin người dùng
             for (x,y,w,h) in faces:
-                # Vẽ hình chữ nhật bao quanh khuôn mặt
                 cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-
-                # Nhận diện khuôn mặt
                 face_img = gray[y:y+h, x:x+w]
                 face_img = cv2.resize(face_img, (100, 100))
                 face_img = face_img.reshape(1, -1)
-
-                # Sử dụng model để dự đoán
+########################################################################################### sử dụng model pickle
                 label = model.predict(face_img)[0]
                 confidence = model.predict_proba(face_img)[0][label]
 
