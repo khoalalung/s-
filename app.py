@@ -248,3 +248,10 @@ if __name__ == '__main__':
     st.title("Face Recognition")
     st.sidebar.title("Menu")
     app_mode = st.sidebar.selectbox("Choose the app mode", ["Homepage", "Register", "Detect"])
+ if app_mode == "Homepage":
+        st.write("Welcome to Face Recognition")
+        st.write("Please select a mode from the menu.")
+ elif app_mode == "Register":
+        register()
+ elif app_mode == "Detect":
+        recognize()
