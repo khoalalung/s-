@@ -169,8 +169,9 @@ def register():
                 df.to_csv("data.csv", mode="a", header=False, index=False)
             else:
                 df.to_csv("data.csv", index=False)
-                st.write("Đăng ký thành công!")
-                break
+            st.write("Đăng ký thành công!")
+            break
+
     cap.release()
 
     
