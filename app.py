@@ -189,14 +189,11 @@ def register():
             ret, frame = cap.read()
         else:
             break
-        ret, frame = cap.read()
-
         if not ret:
             st.warning("Could not read from the camera. Please try again.")
             break
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         st.image(frame, use_column_width=True, channels="RGB")
-
         st.write("Vui lòng điền thông tin của bạn")
         name = st.text_input("Tên")
         age = st.number_input("Tuổi")
