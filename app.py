@@ -221,9 +221,8 @@ def register():
                 try:
                     cap.release()
                 except AttributeError:
-                    pass 
+                    pass  # Or you could print an error message here
                 break
-
     try:
         cap.release()
     except AttributeError:
