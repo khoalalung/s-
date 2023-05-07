@@ -425,7 +425,11 @@ class FaceRecognizer:
 
     def LoadRecognizer(self, dir_path) -> None:
         if self.recognizer_type == 'Eigen':
-            self.face_recognizer = cv2.face.EigenFaceRecognizer_create()
+         if cv2.__version__.startswith('4'):
+             self.face_recognizer = cv2.face.EigenFaceRecognizer_create()
+         else:
+             self.face_recognizer = cv2.createEigenFaceRecognizer()
+
         elif self.recognizer_type == 'Fisher':
             self.face_recognizer = cv2.face.FisherFaceRecognizer_create()
         elif self.recognizer_type == 'LBPH':
